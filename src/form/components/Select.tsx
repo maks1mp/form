@@ -16,6 +16,7 @@ export const Select: React.FC<InputHTMLAttributes<HTMLInputElement> & {
     <div>
       <div>Picked</div>
       <Field as="select" name={name} id={id}>
+        <option />
         {values.map(v => (
           <option key={v.id} value={v.value} label={v.label}>{v.label}</option>
         ))}

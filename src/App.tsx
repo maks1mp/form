@@ -23,23 +23,27 @@ const App: React.FC = () => {
   return formData ? (
     <>
       {fulfilledOrder && Array.isArray(fulfilledOrder) && (
-        <table>
+        <table style={{ border: "solid", borderCollapse: "collapse", marginBottom: 20 }} width="100%">
           <thead>
           <tr>
-            {formData.find(d => d.name === Sections.product)?.fields!.map(f => (<th>{f.label}</th>))}
+            {formData.find(d => d.name === Sections.product)?.fields!.map(f => (<th key={f.id} style={{ border: "solid"}}>{f.label}</th>))}
           </tr>
           </thead>
           <tbody>
             {fulfilledOrder.map((order, index) => {
               return (
                 <tr key={index}>
-                  {Object.values(order).map((v, i) => (<td key={i}>{typeof v === 'object' ? v.name : v}</td>))}
+                  {Object.values(order).map((v, i) => (<td style={{ border: "solid"}} key={i}>{typeof v === 'object' ? v.name : v}</td>))}
                 </tr>
               )
             })}
           </tbody>
         </table>
       )}
+
+      <button onClick={() => {
+        setVisibleEdit(false)
+      }}>ADD NEW PRODUCT</button>
 
       {!visibleEdit && <FormContent
         fields={formData.find(d => d.name === Sections.product)?.fields!}
@@ -60,7 +64,7 @@ const App: React.FC = () => {
       <FormContent
           fields={formData.find(d => d.name === Sections.customer)?.fields!}
           handleSubmit={values => {
-            console.log(values)
+            console.log(fulfilledOrder, values)
           }}
       >
           <button type="submit">

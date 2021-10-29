@@ -1,27 +1,30 @@
-import React from 'react';
-import {ErrorMessage, Field, Form, Formik} from 'formik';
+import React, {useState} from 'react';
+import DatePicker from 'react-datepicker'
+import {ErrorMessage, Field, FieldProps, Form, Formik} from 'formik';
 import {FormField, FormValues, Types} from '../../types';
 import {Select} from './Select';
-import DatePicker from 'react-datepicker'
 
-import 'react-datepicker/dist/react-datepicker.css';
 import {Radio} from './Radio';
 import {Search} from './Search';
+import {Serial} from './Serial';
 import {createFormValidation, createFormValues} from '../helpers';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import {States} from './States';
 
 const FormContent: React.FC<{
   fields: FormField[],
   handleSubmit: (p: FormValues) => void,
 }> = ({
-  fields,
-  handleSubmit,
-  children
-}) => {
+        fields,
+        handleSubmit,
+        children
+      }) => {
   const fieldMeta = (f: FormField) => {
     return (
       <>
         {f.description && <div>{f.description}</div>}
-        <ErrorMessage name={f.name} />
+        <ErrorMessage name={f.name}/>
       </>
     )
   }
@@ -35,19 +38,27 @@ const FormContent: React.FC<{
       }}
     >
       {formik => (
-        <Form onSubmit={formik.handleSubmit}>
+        <Form style={{ marginBottom: 30, marginTop: 30 }} onSubmit={formik.handleSubmit}>
           <>
             {fields.map(f => {
               const key = [f.id, f.name, f.label].join('');
 
               switch (f.type) {
                 case Types.textInput:
-                case Types.serialNumber:
+                case Types.phone:
                 case Types.email: {
                   return (
                     <div key={key}>
                       <span>{f.label}</span>
                       <Field name={f.name}/>
+                      {fieldMeta(f)}
+                    </div>
+                  )
+                }
+                case Types.serialNumber: {
+                  return (
+                    <div key={key}>
+                      <Field component={Serial} {...f} />
                       {fieldMeta(f)}
                     </div>
                   )
@@ -102,17 +113,20 @@ const FormContent: React.FC<{
 
                   return (
                     <div key={key}>
-                      <DatePicker
-                        selected={value ? new Date(value as string) : null}
-                        dateFormat="MMMM d, yyyy"
-                        className="form-control"
-                        name="startDate"
-                        onChange={date => {
-                          if (date) {
-                            formik.setFieldValue(f.name, date.toString())
-                          }
-                        }}
-                      />
+                      <label>
+                        <span>{f.label}</span>
+                        <DatePicker
+                          selected={value ? new Date(value as string) : null}
+                          dateFormat="MMMM d, yyyy"
+                          className="form-control"
+                          name="startDate"
+                          onChange={date => {
+                            if (date) {
+                              formik.setFieldValue(f.name, date.toString())
+                            }
+                          }}
+                        />
+                      </label>
                       {fieldMeta(f)}
                     </div>
                   )
@@ -120,7 +134,68 @@ const FormContent: React.FC<{
                 case Types.product: {
                   return (
                     <div key={key}>
-                      <Field {...f} component={Search} />
+                      <Field
+                        {...f}
+                        component={Search}
+                        promiseOptions={async (inputValue: string) => {
+                          const response = await fetch(`search.json?q=${inputValue}`);
+                          const data = await response.json();
+
+                          return data.map((d: FormValues) => ({
+                            value: d.id, label: d.title
+                          }))
+                        }}/>
+                      {fieldMeta(f)}
+                    </div>
+                  )
+                }
+                case Types.country: {
+                  return (
+                    <div key={key}>
+                      <label>
+                        <span>
+                          {f.label}
+                        </span>
+                        <Field
+                          {...f}
+                          component={Search}
+                          promiseOptions={async (inputValue: string) => {
+                            const response = await fetch(`countries.json`, {
+                              cache: 'force-cache',
+                            });
+                            const data: Record<string, string> = await response.json();
+
+                            return Object.entries(data)
+                              .filter(([key, value]) => value.toLowerCase().includes(inputValue.toLowerCase()))
+                              .map(([key, value]) => ({
+                                value: key, label: value
+                              }))
+                          }}/>
+                      </label>
+                      {fieldMeta(f)}
+                    </div>
+                  )
+                }
+
+                case Types.state: {
+                  const country = (formik.values?.country ?? '') as string;
+
+
+                  return (
+                    <div key={key}>
+                      <label>
+                        <span>
+                          {f.label}
+                        </span>
+                        <Field
+                          {...f}
+                          country={country}
+                          render={(props: FieldProps) => {
+                            return <States country={country} {...props} />
+                          }}
+                          disabled={!Boolean(country)}
+                        />
+                      </label>
                       {fieldMeta(f)}
                     </div>
                   )
