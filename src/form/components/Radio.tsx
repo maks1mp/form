@@ -8,23 +8,20 @@ export const Radio: React.FC<InputHTMLAttributes<HTMLInputElement> & {
     value: string;
   }[]
 }> = ({
-  name,
-  values,
-  id,
+        name,
+        values,
+        id,
       }) => {
   return (
-    <div id={id}>
-      <div>Picked</div>
-      <div role="group">
-        {values.map(v => (
-          <label key={v.id}>
+    <div role="group" id={id}>
+      {values.map(v => (
+        <label key={v.id}>
             <span>
               {v.label}
             </span>
-            <Field type="radio" id={v.id} name={name} value={v.value} />
-          </label>
-        ))}
-      </div>
+          <Field type="radio" id={v.id} name={name} value={v.value}/>
+        </label>
+      ))}
     </div>
   )
 }

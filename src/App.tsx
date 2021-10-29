@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {useForm} from './form/hooks/useForm';
+import {useForm} from 'form/hooks/useForm';
 import {FormValues, Sections} from './types';
-import FormContent from './form/components';
+import FormContent from 'form/components';
 
 const App: React.FC = () => {
   const {formData, loading, error} = useForm();
@@ -47,6 +47,11 @@ const App: React.FC = () => {
             setVisibleEdit(false)
           }}>ADD NEW PRODUCT
           </button>
+
+          <button onClick={() => {
+            setVisibleEdit(true)
+          }}>CANCEL
+          </button>
         </>
       )}
 
@@ -66,17 +71,18 @@ const App: React.FC = () => {
           </button>
       </FormContent>}
 
-      {fulfilledOrder && Array.isArray(fulfilledOrder) &&
-      <FormContent
-          fields={formData.find(d => d.name === Sections.customer)?.fields!}
-          handleSubmit={values => {
-            console.log(fulfilledOrder, values)
-          }}
-      >
-          <button type="submit">
-              Register
-          </button>
-      </FormContent>}
+      {visibleEdit && fulfilledOrder && Array.isArray(fulfilledOrder) && (
+        <FormContent
+            fields={formData.find(d => d.name === Sections.customer)?.fields!}
+            handleSubmit={values => {
+              console.log(fulfilledOrder, values)
+            }}
+        >
+            <button type="submit">
+                Register
+            </button>
+        </FormContent>
+      )}
     </>
   ) : null;
 }

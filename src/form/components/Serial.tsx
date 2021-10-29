@@ -55,6 +55,11 @@ export const Serial: React.FC<FieldProps & {id: string; label: string}> = ({
         <input
           disabled={Boolean(submitted)}
           type="text"
+          onKeyDown={e => {
+            if (e && e.key === 'Enter') {
+              submitIfValid()
+            }
+          }}
           onBlur={submitIfValid}
           onChange={e => setValue(e.target.value)}
           value={value}

@@ -29,15 +29,17 @@ export const States: React.FC<FieldProps & { country: string; disabled?: boolean
   }
 
   useEffect(() => {
-    fetchStates(country)
-  }, [country])
+    fetchStates(country);
+  }, [form, field, country])
 
   return (
     <Select
       options={states}
       name={field.name}
-      defaultValue={field.value}
-      onChange={(option) => form.setFieldValue(field.name, (option as any).value)}
+      value={field.value}
+      onChange={(option) => {
+        form.setFieldValue(field.name, option)
+      }}
       isDisabled={Boolean(disabled)}
     />
   )

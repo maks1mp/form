@@ -1,16 +1,16 @@
 import React from 'react';
 import DatePicker from 'react-datepicker'
 import {ErrorMessage, Field, FieldProps, Form, Formik} from 'formik';
-import {FormField, FormValues, Types} from '../../types';
-import {Select} from './Select';
+import {FormField, FormValues, Types} from 'types';
+import {Select} from 'form/components/Select';
 
-import {Radio} from './Radio';
-import {Search} from './Search';
-import {Serial} from './Serial';
-import {createFormValidation, createFormValues} from '../helpers';
+import {Radio} from 'form/components/Radio';
+import {Serial} from 'form/components/Serial';
+import {States} from 'form/components/States';
+import {createFormValidation, createFormValues} from 'form/helpers';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import {States} from './States';
+import AsyncSelect from 'react-select/async';
 
 const FormContent: React.FC<{
   fields: FormField[],
@@ -38,7 +38,7 @@ const FormContent: React.FC<{
       }}
     >
       {formik => (
-        <Form style={{ marginBottom: 30, marginTop: 30 }} onSubmit={formik.handleSubmit}>
+        <Form style={{marginBottom: 30, marginTop: 30}} onSubmit={formik.handleSubmit}>
           <>
             {fields.map(f => {
               const key = [f.id, f.name, f.label].join('');
@@ -49,8 +49,12 @@ const FormContent: React.FC<{
                 case Types.email: {
                   return (
                     <div key={key}>
-                      <span>{f.label}</span>
-                      <Field name={f.name}/>
+                      <div>
+                        <label>
+                          <span>{f.label}</span>
+                          <Field name={f.name}/>
+                        </label>
+                      </div>
                       {fieldMeta(f)}
                     </div>
                   )
@@ -88,9 +92,12 @@ const FormContent: React.FC<{
 
                   return (
                     <div key={key}>
-                      <Radio
-                        {...restProps}
-                        values={values}/>
+                      <div>
+                        <div>{f.label}</div>
+                        <Radio
+                          {...restProps}
+                          values={values}/>
+                      </div>
                       {fieldMeta(f)}
                     </div>
                   )
@@ -100,10 +107,13 @@ const FormContent: React.FC<{
 
                   return (
                     <div key={key}>
-                      <Select
-                        {...restProps}
-                        values={values}
-                      />
+                      <label>
+                        <span>{f.label}</span>
+                        <Select
+                          {...restProps}
+                          values={values}
+                        />
+                      </label>
                       {fieldMeta(f)}
                     </div>
                   )
@@ -134,17 +144,42 @@ const FormContent: React.FC<{
                 case Types.product: {
                   return (
                     <div key={key}>
-                      <Field
-                        {...f}
-                        component={Search}
-                        promiseOptions={async (inputValue: string) => {
-                          const response = await fetch(`search.json?q=${inputValue}`);
-                          const data = await response.json();
+                      <label>
+                        <span>{f.label}</span>
+                        <Field
+                          {...f}
+                          render={({field, form}: FieldProps) => {
+                            return (
+                              <AsyncSelect
+                                cacheOptions
+                                formatOptionLabel={(props: Record<string, any>) => {
+                                  return (
+                                    <div style={{display: 'flex', alignItems: 'center'}}>
+                                      <img width={32} src={props?.image?.src} alt=""/>
+                                      <span>
+                                        {props?.title}
+                                      </span>
+                                    </div>
+                                  )
+                                }}
+                                isClearable
+                                defaultOptions
+                                name={field.name}
+                                value={field.value || ''}
+                                isOptionSelected={(option, selectValue) => {
+                                  return selectValue.some(v => v.variantId === option.variantId)
+                                }}
+                                onChange={(option) => form.setFieldValue(field.name, option)}
+                                loadOptions={async (inputValue: string) => {
+                                  const response = await fetch(`search.json?q=${inputValue}`);
 
-                          return data.map((d: FormValues) => ({
-                            value: d.id, label: d.title
-                          }))
-                        }}/>
+                                  return await response.json();
+                                }}
+                              />
+                            )
+                          }}
+                        />
+                      </label>
                       {fieldMeta(f)}
                     </div>
                   )
@@ -158,19 +193,33 @@ const FormContent: React.FC<{
                         </span>
                         <Field
                           {...f}
-                          component={Search}
-                          promiseOptions={async (inputValue: string) => {
-                            const response = await fetch(`countries.json`, {
-                              cache: 'force-cache',
-                            });
-                            const data: Record<string, string> = await response.json();
+                          render={({form, field}: FieldProps) => {
+                            return (
+                              <AsyncSelect
+                                cacheOptions
+                                defaultOptions
+                                name={field.name}
+                                defaultValue={field.value}
+                                onChange={(option) => {
+                                  form.setFieldValue('state', '');
+                                  form.setFieldValue(field.name, (option as any).value);
+                                }}
+                                loadOptions={async (inputValue: string) => {
+                                  const response = await fetch(`countries.json`, {
+                                    cache: 'force-cache',
+                                  });
+                                  const data: Record<string, string> = await response.json();
 
-                            return Object.entries(data)
-                              .filter(([key, value]) => value.toLowerCase().includes(inputValue.toLowerCase()))
-                              .map(([key, value]) => ({
-                                value: key, label: value
-                              }))
-                          }}/>
+                                  return Object.entries(data)
+                                    .filter(([key, value]) => value.toLowerCase().includes(inputValue.toLowerCase()))
+                                    .map(([key, value]) => ({
+                                      value: key, label: value
+                                    }))
+                                }}
+                              />
+                            )
+                          }}
+                          />
                       </label>
                       {fieldMeta(f)}
                     </div>
@@ -179,7 +228,6 @@ const FormContent: React.FC<{
 
                 case Types.state: {
                   const country = (formik.values?.country ?? '') as string;
-
 
                   return (
                     <div key={key}>

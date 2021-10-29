@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
-import {FieldsGroup} from '../../types';
+import {FieldsGroup} from 'types';
 
 export function useForm() {
   const [formData, setFormData] = useState<FieldsGroup[] | null>();

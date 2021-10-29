@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import {FormField, FormValues} from '../../types';
+import {FormField, FormValues, Types} from 'types';
 
 export function createFormValues(fields: FormField[]): FormValues {
   return fields.reduce((acc, next) => ({
@@ -11,6 +11,14 @@ export function createFormValues(fields: FormField[]): FormValues {
 export function createFormValidation(fields: FormField[]) {
   const fieldsValidation = fields.reduce((acc, next) => {
     const f = yup.lazy(v => {
+      if (next.type === Types.product && next.required) {
+        return yup.object().required(`${next.label} is a required field`).nullable()
+      }
+
+      if (next.type === Types.email && next.required) {
+        return yup.string().email(`Invalid email`).required(`${next.label} is a required field`)
+      }
+
       if (next.required) {
         return yup.string().required(`${next.label} is a required field`)
       }
