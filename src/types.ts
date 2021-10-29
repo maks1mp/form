@@ -57,5 +57,15 @@ export interface FieldsGroup {
   fields: Array<FormField>;
 }
 
-export type FormValues = Record<string, string | number | File>
+export interface Product {
+  id: UniqueId;
+  title: string;
+  handle: string;
+  image: {
+    src: string;
+  },
+  variantId: UniqueId;
+}
+
+export type FormValues = Record<string, string | number | File | Product>
 

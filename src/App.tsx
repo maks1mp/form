@@ -36,7 +36,14 @@ const App: React.FC = () => {
               return (
                 <tr key={index}>
                   {Object.values(order).map((v, i) => (
-                    <td style={{border: 'solid'}} key={i}>{typeof v === 'object' ? v.name : v}</td>))}
+                    <td style={{border: 'solid'}} key={i}>{typeof v === 'object' ? ('name' in v ? v.name : (
+                      <div style={{ textAlign: 'center' }}>
+                        <img width={32} src={v.image.src} alt=""/>
+                        <div>
+                          {v.title}
+                        </div>
+                      </div>
+                    )) : v}</td>))}
                 </tr>
               )
             })}
