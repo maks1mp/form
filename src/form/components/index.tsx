@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker'
 import {ErrorMessage, Field, FieldProps, Form, Formik} from 'formik';
 import {FormField, FormValues, Types} from '../../types';
