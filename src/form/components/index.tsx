@@ -123,20 +123,22 @@ const FormContent: React.FC<{
 
                   return (
                     <div key={key}>
-                      <label>
+                      <label htmlFor={f.id}>
                         <span>{f.label}</span>
-                        <DatePicker
-                          selected={value ? new Date(value as string) : null}
-                          dateFormat="MMMM d, yyyy"
-                          className="form-control"
-                          name="startDate"
-                          onChange={date => {
-                            if (date) {
-                              formik.setFieldValue(f.name, date.toString())
-                            }
-                          }}
-                        />
                       </label>
+                      <DatePicker
+                        id={f.id}
+                        required={f.required}
+                        selected={value ? new Date(value as string) : null}
+                        dateFormat="MMMM d, yyyy"
+                        className="form-control"
+                        name={f.name}
+                        onChange={date => {
+                          if (date) {
+                            formik.setFieldValue(f.name, date.toString())
+                          }
+                        }}
+                      />
                       {fieldMeta(f)}
                     </div>
                   )
@@ -219,7 +221,7 @@ const FormContent: React.FC<{
                               />
                             )
                           }}
-                          />
+                        />
                       </label>
                       {fieldMeta(f)}
                     </div>

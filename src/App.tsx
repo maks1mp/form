@@ -50,15 +50,15 @@ const App: React.FC = () => {
             </tbody>
           </table>
 
-          <button onClick={() => {
+          {visibleEdit && <button onClick={() => {
             setVisibleEdit(false)
           }}>ADD NEW PRODUCT
-          </button>
+          </button>}
 
-          <button onClick={() => {
+          {!visibleEdit && <button onClick={() => {
             setVisibleEdit(true)
           }}>CANCEL
-          </button>
+          </button>}
         </>
       )}
 
