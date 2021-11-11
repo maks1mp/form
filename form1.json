@@ -1,0 +1,203 @@
+[
+  {
+    "name": "all",
+    "fields": [
+      {
+        "type": "product",
+        "label": "Product Name",
+        "name": "productName",
+        "description": "",
+        "placeholder": "Please input the product name",
+        "required": true,
+        "id": "product-2"
+      },
+      {
+        "type": "serialNumber",
+        "label": "Serial Number",
+        "name": "serialNumber",
+        "description": "",
+        "placeholder": "Please input the serial number",
+        "required": true,
+        "id": "serialNumber-3"
+      },
+      {
+        "type": "date",
+        "label": "Purchase Date",
+        "name": "purchaseDate",
+        "description": "",
+        "placeholder": "Please select the purchase date",
+        "required": true,
+        "id": "date-4"
+      },
+      {
+        "type": "dropdown",
+        "name": "dropDown",
+        "value": "",
+        "label": "Where you bought it from",
+        "description": "",
+        "options": [
+          {
+            "id": "Amazon-6",
+            "label": "Amazon",
+            "value": "amazon"
+          },
+          {
+            "id": "Ebay-7",
+            "label": "Ebay",
+            "value": "ebay"
+          },
+          {
+            "id": "Online Shop-8",
+            "label": "Online Shop",
+            "value": "online shop"
+          }
+        ],
+        "required": false,
+        "other": true,
+        "id": "dropdown-5"
+      },
+      {
+        "type": "checkboxes",
+        "name": "checkboxes",
+        "value": "",
+        "label": "Gender",
+        "description": "",
+        "options": [
+          {
+            "id": "Male-10",
+            "label": "Male",
+            "value": "male"
+          },
+          {
+            "id": "Female-11",
+            "label": "Female",
+            "value": "female"
+          }
+        ],
+        "required": true,
+        "id": "checkboxes-9"
+      },
+      {
+        "type": "file",
+        "name": "file",
+        "value": "",
+        "label": "Upload the receipt",
+        "description": "",
+        "accept": ".jpg, .jpeg, .png, .gif, .bmp",
+        "required": true,
+        "id": "file-12"
+      },
+      {
+        "type": "textInput",
+        "name": "Text Input",
+        "value": "",
+        "label": "Any comments",
+        "description": "",
+        "placeholder": "",
+        "required": false,
+        "id": "textInput-14"
+      },
+      {
+        "type": "textInput",
+        "label": "First Name",
+        "name": "firstName",
+        "value": "",
+        "description": "",
+        "placeholder": "First Name",
+        "required": false,
+        "id": "textInput-15"
+      },
+      {
+        "type": "textInput",
+        "label": "Last Name",
+        "name": "surname",
+        "value": "",
+        "description": "",
+        "placeholder": "Last Name",
+        "required": false,
+        "id": "textInput-16"
+      },
+      {
+        "type": "email",
+        "name": "email",
+        "label": "Email",
+        "value": "",
+        "description": "",
+        "placeholder": "Please enter your email address",
+        "required": true,
+        "id": "email-17"
+      },
+      {
+        "type": "textInput",
+        "label": "Address 1",
+        "name": "address1",
+        "placeholder": "Address 1",
+        "value": "",
+        "description": "",
+        "required": false,
+        "id": "textInput-18"
+      },
+      {
+        "type": "textInput",
+        "label": "Address 2",
+        "name": "address2",
+        "placeholder": "Address 2",
+        "value": "",
+        "description": "",
+        "required": false,
+        "id": "textInput-19"
+      },
+      {
+        "type": "textInput",
+        "label": "City",
+        "name": "city",
+        "placeholder": "City",
+        "value": "",
+        "description": "",
+        "required": false,
+        "id": "textInput-20"
+      },
+      {
+        "type": "country",
+        "label": "Country",
+        "name": "country",
+        "placeholder": "Country",
+        "value": "GB",
+        "default": "GB",
+        "description": "",
+        "required": false,
+        "id": "country-21"
+      },
+      {
+        "type": "state",
+        "label": "State",
+        "name": "state",
+        "placeholder": "Sate",
+        "value": "",
+        "description": "",
+        "required": false,
+        "id": "state-22"
+      },
+      {
+        "type": "textInput",
+        "label": "Post Code (Zip)",
+        "name": "postCode",
+        "placeholder": "Post Code (Zip)",
+        "value": "",
+        "description": "",
+        "required": false,
+        "id": "textInput-23"
+      },
+      {
+        "type": "phone",
+        "label": "Mobile",
+        "name": "phone",
+        "placeholder": "Please enter your phone number",
+        "value": "",
+        "description": "",
+        "required": false,
+        "id": "phone-24"
+      }
+    ]
+  }
+]
