@@ -2,6 +2,8 @@ import React, {memo, useEffect, useState} from 'react';
 import Select from 'react-select';
 import {FieldProps} from 'formik';
 
+let cachedStates:Record<string, Record<string, string>> | null = null;
+
 const States: React.FC<FieldProps & { country: string; disabled?: boolean }> = ({
   country,
   field,
@@ -11,10 +13,20 @@ const States: React.FC<FieldProps & { country: string; disabled?: boolean }> = (
   const [states, setStates] = useState<{value: string; label: string;}[]>([]);
 
   async function fetchStates(country: string) {
-    const response = await fetch(`states.json`, {
-      cache: 'force-cache',
-    });
-    const data: Record<string, Record<string, string>> = await response.json();
+    let data: Record<string, Record<string, string>>
+
+    if (!cachedStates) {
+      cachedStates = {};
+
+      const response = await fetch(`states.json`, {
+        cache: 'force-cache',
+      });
+      data = await response.json();
+
+      cachedStates = data;
+    } else {
+      data = cachedStates;
+    }
 
     if (country && country in data) {
       setStates(

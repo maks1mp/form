@@ -7,6 +7,7 @@ import {Select} from 'form/components/Select';
 import {Radio} from 'form/components/Radio';
 import {Serial} from 'form/components/Serial';
 import States from 'form/components/States';
+import Country from 'form/components/Country';
 import {createFormValidation, createFormValues} from 'form/helpers';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -211,31 +212,9 @@ const FormContent: React.FC<{
                         <Field
                           {...f}
                           disabled={formik.isSubmitting}
-                          render={({form, field}: FieldProps) => {
+                          render={(props: FieldProps) => {
                             return (
-                              <AsyncSelect
-                                cacheOptions
-                                defaultOptions
-                                name={field.name}
-                                defaultValue={field.value}
-                                isDisabled={formik.isSubmitting}
-                                onChange={(option) => {
-                                  form.setFieldValue('state', '');
-                                  form.setFieldValue(field.name, (option as any).value);
-                                }}
-                                loadOptions={async (inputValue: string) => {
-                                  const response = await fetch(`countries.json`, {
-                                    cache: 'force-cache',
-                                  });
-                                  const data: Record<string, string> = await response.json();
-
-                                  return Object.entries(data)
-                                    .filter(([key, value]) => value.toLowerCase().includes(inputValue.toLowerCase()))
-                                    .map(([key, value]) => ({
-                                      value: key, label: value
-                                    }))
-                                }}
-                              />
+                              <Country {...props} disabled={formik.isSubmitting} />
                             )
                           }}
                         />
