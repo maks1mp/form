@@ -27,15 +27,30 @@ const FlowMultiple: React.FC<{
             {fulfilledOrder.map((order, index) => {
               return (
                 <tr key={index}>
-                  {Object.values(order).map((v, i) => (
-                    <td style={{border: 'solid'}} key={i}>{typeof v === 'object' ? ('name' in v ? v.name : (
-                      <div style={{ textAlign: 'center' }}>
-                        <img width={32} src={v?.image?.src} alt=""/>
-                        <div>
-                          {v.title}
-                        </div>
-                      </div>
-                    )) : v}</td>))}
+                  {Object.values(order).map((v, i) => {
+                    let item: React.ReactNode;
+
+                    if (typeof v === 'object') {
+                      if ('name' in v) {
+                        item = v.name;
+                      } else if (Array.isArray(v)) {
+                        item = v.join(', ');
+                      } else {
+                        item = (<div style={{ textAlign: 'center' }}>
+                          <img width={32} src={v?.image?.src} alt=""/>
+                          <div>
+                            {v.title}
+                          </div>
+                        </div>)
+                      }
+                    } else {
+                      item = v;
+                    }
+
+                    return (
+                      <td style={{border: 'solid'}} key={i}>{item}</td>
+                    )}
+                  )}
                 </tr>
               )
             })}

@@ -145,7 +145,7 @@ const FormContent: React.FC<{
                         required={f.required}
                         selected={value ? new Date(value as string) : null}
                         dateFormat="MMMM d, yyyy"
-                        className="form-control"
+                        onBlur={formik.handleBlur}
                         name={f.name}
                         onChange={date => {
                           if (date) {

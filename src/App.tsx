@@ -17,34 +17,44 @@ function onSubmit(data: FormValues, products?: FormValues[]): Promise<{
     items: [],
   };
 
-  if (!products) {
-    [
-      'name', 'firstName', 'surname', 'dob', 'email', 'address1', 'address2',
-      'city', 'country', 'state', 'postCode', 'phone'
-    ].forEach(key => {
-      payload.customer[key] = data[key]
+  const mapProduct = ({productName: product, serialNumber: serialNumbers, state, ...restProps}: Record<string, any>) => {
+    const { image, ...restProduct } = product;
 
-      delete data[key];
-    })
-
-    const {productName: product, serialNumber: serialNumbers} = data;
-
-    payload.items = [{
-      product,
+    return {
+      ...restProps,
+      product: {
+        imageUrl: image?.src,
+        ...restProduct,
+      },
       serialNumbers,
       purchaseDate: new Date().toISOString(),
-    }]
-  } else {
-    payload.customer = data;
-    payload.items = products.map(p => {
-      const {productName: product, serialNumber: serialNumbers} = p;
+    }
+  }
 
-      return {
-        product,
-        serialNumbers,
-        purchaseDate: new Date().toISOString(),
-      }
-    })
+  const mapUserData = ({state, ...restData}: Record<string, any>) => {
+    return {
+      ...restData,
+      state: typeof state === 'object' ? state.label : state,
+    }
+  }
+
+  if (!products) {
+    const userData = [
+      'name', 'firstName', 'surname', 'dob', 'email', 'address1', 'address2',
+      'city', 'country', 'state', 'postCode', 'phone'
+    ].reduce((acc: Record<string, any>, key) => {
+      acc[key] = data[key]
+
+      delete data[key];
+
+      return acc;
+    }, {})
+
+    payload.customer = mapUserData(userData)
+    payload.items = [mapProduct(data)]
+  } else {
+    payload.customer = mapUserData(data);
+    payload.items = products.map(mapProduct)
   }
 
   return fetch('https://ensdmrncariaqkb.m.pipedream.net', {
@@ -100,6 +110,7 @@ const App: React.FC = () => {
         setPostError(response.error)
       }
     } catch (e) {
+      console.log(e)
       setModal(true)
     } finally {
       setSubmitting(false)

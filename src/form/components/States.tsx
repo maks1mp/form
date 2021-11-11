@@ -50,7 +50,7 @@ const States: React.FC<FieldProps & { country: string; disabled?: boolean }> = (
       name={field.name}
       value={field.value}
       onChange={(option) => {
-        form.setFieldValue(field.name, option)
+        form.setFieldValue(field.name, option.value)
       }}
       isDisabled={Boolean(disabled)}
     />
