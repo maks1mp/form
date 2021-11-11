@@ -30,7 +30,7 @@ const FlowMultiple: React.FC<{
                   {Object.values(order).map((v, i) => (
                     <td style={{border: 'solid'}} key={i}>{typeof v === 'object' ? ('name' in v ? v.name : (
                       <div style={{ textAlign: 'center' }}>
-                        <img width={32} src={v.image.src} alt=""/>
+                        <img width={32} src={v?.image?.src} alt=""/>
                         <div>
                           {v.title}
                         </div>
