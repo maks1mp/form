@@ -32,6 +32,8 @@ function onSubmit(data: FormValues, products?: FormValues[]): Promise<{
   }
 
   const mapUserData = ({state, ...restData}: Record<string, any>) => {
+
+    console.log(state, restData)
     return {
       ...restData,
       state: typeof state === 'object' ? state.label : state,
