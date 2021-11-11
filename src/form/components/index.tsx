@@ -6,7 +6,7 @@ import {Select} from 'form/components/Select';
 
 import {Radio} from 'form/components/Radio';
 import {Serial} from 'form/components/Serial';
-import {States} from 'form/components/States';
+import States from 'form/components/States';
 import {createFormValidation, createFormValues} from 'form/helpers';
 
 import 'react-datepicker/dist/react-datepicker.css';

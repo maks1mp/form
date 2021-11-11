@@ -72,6 +72,14 @@ const App: React.FC = () => {
     }
   }, [redirect])
 
+  useEffect(() => {
+    if (modal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [modal]);
+
   const submit = useCallback(async (data: FormValues, products?: FormValues[]) => {
     setSubmitting(true)
 

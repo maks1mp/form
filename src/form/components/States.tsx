@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import Select from 'react-select';
 import {FieldProps} from 'formik';
 
-export const States: React.FC<FieldProps & { country: string; disabled?: boolean }> = ({
+const States: React.FC<FieldProps & { country: string; disabled?: boolean }> = ({
   country,
   field,
   form,
@@ -44,3 +44,5 @@ export const States: React.FC<FieldProps & { country: string; disabled?: boolean
     />
   )
 }
+
+export default memo(States)
