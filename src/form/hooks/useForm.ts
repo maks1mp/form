@@ -5,12 +5,14 @@ export function useForm() {
   const [formData, setFormData] = useState<FieldsGroup[] | null>();
   const [error, setError] = useState<Error | null>()
   const [loading, setLoading] = useState<boolean>(false)
+  const searchParams = new URLSearchParams(document.location.search.substring(1));
+  const formFile = `form${searchParams.get('step') ?? 2}.json`;
 
   const fetchFormData = useCallback(async () => {
     setLoading(true)
 
     try {
-      const response = await fetch('form.json');
+      const response = await fetch(formFile);
 
       const data = await response.json();
 
@@ -22,7 +24,7 @@ export function useForm() {
     } finally {
       setLoading(false);
     }
-  }, [])
+  }, [formFile])
 
   useEffect(() => {
     fetchFormData()

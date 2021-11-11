@@ -15,6 +15,7 @@ export enum Types {
 export enum Sections {
   product = 'product',
   customer = 'customer',
+  all = 'all'
 }
 
 export type FieldType = keyof typeof Types;

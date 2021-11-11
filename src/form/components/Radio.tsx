@@ -11,6 +11,7 @@ export const Radio: React.FC<InputHTMLAttributes<HTMLInputElement> & {
         name,
         values,
         id,
+        disabled
       }) => {
   return (
     <div role="group" id={id}>
@@ -19,7 +20,7 @@ export const Radio: React.FC<InputHTMLAttributes<HTMLInputElement> & {
             <span>
               {v.label}
             </span>
-          <Field type="radio" id={v.id} name={name} value={v.value}/>
+          <Field type="radio" id={v.id} name={name} value={v.value} disabled={disabled} />
         </label>
       ))}
     </div>

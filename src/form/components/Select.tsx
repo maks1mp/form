@@ -10,10 +10,11 @@ export const Select: React.FC<InputHTMLAttributes<HTMLInputElement> & {
 }> = ({
         name,
         id,
-        values
+        values,
+        ...restProps
       }) => {
   return (
-    <Field as="select" name={name} id={id}>
+    <Field as="select" name={name} id={id} {...restProps}>
       <option/>
       {values.map(v => (
         <option key={v.id} value={v.value} label={v.label}>{v.label}</option>

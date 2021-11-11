@@ -11,6 +11,10 @@ export function createFormValues(fields: FormField[]): FormValues {
 export function createFormValidation(fields: FormField[]) {
   const fieldsValidation = fields.reduce((acc, next) => {
     const f = yup.lazy(v => {
+      if (next.type === Types.serialNumber && next.required) {
+        return yup.array().of(yup.string()).required(`${next.label} is a required field`).min(1).ensure()
+      }
+
       if (next.type === Types.product && next.required) {
         return yup.object().required(`${next.label} is a required field`).nullable()
       }

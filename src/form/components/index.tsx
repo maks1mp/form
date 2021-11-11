@@ -16,10 +16,10 @@ const FormContent: React.FC<{
   fields: FormField[],
   handleSubmit: (p: FormValues) => void,
 }> = ({
-        fields,
-        handleSubmit,
-        children
-      }) => {
+  fields,
+  handleSubmit,
+  children
+}) => {
   const fieldMeta = (f: FormField) => {
     return (
       <>
@@ -52,7 +52,7 @@ const FormContent: React.FC<{
                       <div>
                         <label>
                           <span>{f.label}</span>
-                          <Field name={f.name}/>
+                          <Field name={f.name} disabled={formik.isSubmitting} />
                         </label>
                       </div>
                       {fieldMeta(f)}
@@ -62,7 +62,16 @@ const FormContent: React.FC<{
                 case Types.serialNumber: {
                   return (
                     <div key={key}>
-                      <Field component={Serial} {...f} />
+                      <Field
+                        render={(props: FieldProps) => (
+                          <Serial
+                            {...props}
+                            {...f}
+                            disabled={formik.isSubmitting}
+                          />
+                        )}
+                        {...f}
+                      />
                       {fieldMeta(f)}
                     </div>
                   )
@@ -75,6 +84,7 @@ const FormContent: React.FC<{
                       </label>
                       <div>
                         <input
+                          disabled={formik.isSubmitting}
                           accept={f.accept}
                           type={f.type}
                           name={f.name}
@@ -95,6 +105,7 @@ const FormContent: React.FC<{
                       <div>
                         <div>{f.label}</div>
                         <Radio
+                          disabled={formik.isSubmitting}
                           {...restProps}
                           values={values}/>
                       </div>
@@ -112,6 +123,7 @@ const FormContent: React.FC<{
                         <Select
                           {...restProps}
                           values={values}
+                          disabled={formik.isSubmitting}
                         />
                       </label>
                       {fieldMeta(f)}
@@ -128,6 +140,7 @@ const FormContent: React.FC<{
                       </label>
                       <DatePicker
                         id={f.id}
+                        disabled={formik.isSubmitting}
                         required={f.required}
                         selected={value ? new Date(value as string) : null}
                         dateFormat="MMMM d, yyyy"
@@ -149,6 +162,7 @@ const FormContent: React.FC<{
                       <label>
                         <span>{f.label}</span>
                         <Field
+                          disabled={formik.isSubmitting}
                           {...f}
                           render={({field, form}: FieldProps) => {
                             return (
@@ -165,6 +179,7 @@ const FormContent: React.FC<{
                                   )
                                 }}
                                 isClearable
+                                isDisabled={formik.isSubmitting}
                                 defaultOptions
                                 name={field.name}
                                 value={field.value || ''}
@@ -195,6 +210,7 @@ const FormContent: React.FC<{
                         </span>
                         <Field
                           {...f}
+                          disabled={formik.isSubmitting}
                           render={({form, field}: FieldProps) => {
                             return (
                               <AsyncSelect
@@ -202,6 +218,7 @@ const FormContent: React.FC<{
                                 defaultOptions
                                 name={field.name}
                                 defaultValue={field.value}
+                                isDisabled={formik.isSubmitting}
                                 onChange={(option) => {
                                   form.setFieldValue('state', '');
                                   form.setFieldValue(field.name, (option as any).value);
@@ -241,9 +258,8 @@ const FormContent: React.FC<{
                           {...f}
                           country={country}
                           render={(props: FieldProps) => {
-                            return <States country={country} {...props} />
+                            return <States country={country} {...props} disabled={!Boolean(country) || formik.isSubmitting} />
                           }}
-                          disabled={!Boolean(country)}
                         />
                       </label>
                       {fieldMeta(f)}
