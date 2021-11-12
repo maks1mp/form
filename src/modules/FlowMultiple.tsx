@@ -69,7 +69,6 @@ const FlowMultiple: React.FC<{
         </>
       )}
 
-
       {!visibleEdit && <FormContent
           fields={formData.find(d => d.name === Sections.product)?.fields!}
           handleSubmit={productPayload => {
@@ -88,9 +87,7 @@ const FlowMultiple: React.FC<{
       {visibleEdit && fulfilledOrder && Array.isArray(fulfilledOrder) && (
         <FormContent
           fields={formData.find(d => d.name === Sections.customer)?.fields!}
-          handleSubmit={values => {
-            onSubmit(values, fulfilledOrder)
-          }}
+          handleSubmit={values => onSubmit(values, fulfilledOrder)}
         >
           <button type="submit">
             Register

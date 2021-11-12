@@ -98,7 +98,6 @@ const App: React.FC = () => {
   const [modal, setModal] = useState(false);
   const [redirect, setRedirect] = useState<string | null>(null)
   const [postError, setPostError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState<boolean>(false)
 
   useEffect(() => {
     if (redirect) {
@@ -117,8 +116,6 @@ const App: React.FC = () => {
   }, [modal]);
 
   const submit = useCallback(async (data: FormValues, products?: FormValues[]) => {
-    setSubmitting(true)
-
     try {
       const response = await onSubmit(data, products)
 
@@ -129,17 +126,20 @@ const App: React.FC = () => {
           setRedirect(response.redirect)
         }
 
-        return;
+        return response;
       }
 
       if (response.error) {
         setPostError(response.error)
+
+        return response;
       }
     } catch (e) {
-      console.log(e)
+      console.error('error submitting data >>', e)
+
       setModal(true)
-    } finally {
-      setSubmitting(false)
+
+      return null;
     }
   }, [])
 
@@ -165,7 +165,6 @@ const App: React.FC = () => {
     <>
       {content}
       {postError && <h3 style={{color: 'red'}}>{postError}</h3>}
-      {submitting && <h3>Loading...</h3>}
       <ReactModal
         isOpen={modal}
       >

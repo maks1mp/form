@@ -34,8 +34,12 @@ const FormContent: React.FC<{
     <Formik
       initialValues={createFormValues(fields)}
       validationSchema={createFormValidation(fields)}
-      onSubmit={(values: FormValues) => {
-        handleSubmit(values)
+      onSubmit={async (values: FormValues, { resetForm }) => {
+        try {
+          await handleSubmit(values)
+        } finally {
+          resetForm(values)
+        }
       }}
     >
       {formik => (
@@ -250,6 +254,7 @@ const FormContent: React.FC<{
               }
             })}
           </>
+          {formik.isSubmitting && <h3>Loading...</h3>}
           {children}
         </Form>
       )}
