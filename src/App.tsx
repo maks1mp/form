@@ -5,11 +5,11 @@ import FlowMultiple from 'modules/FlowMultiple';
 import FlowSingle from 'modules/FlowSingle';
 import ReactModal from 'react-modal';
 
-function onSubmit(data: FormValues, products?: FormValues[]): Promise<{
+async function onSubmit(data: FormValues, products?: FormValues[]): Promise<{
   success: true;
   registeredBefore: true;
   redirect: false;
-  error?: string ;
+  error?: string;
 }> {
   const payload: Record<string, any> = {
     customer: {},
@@ -17,8 +17,30 @@ function onSubmit(data: FormValues, products?: FormValues[]): Promise<{
     items: [],
   };
 
-  const mapProduct = ({productName: product, serialNumber: serialNumbers, state, ...restProps}: Record<string, any>) => {
-    const { image, ...restProduct } = product;
+  function getBase64(file: File) {
+    return new Promise((resolve, reject) => {
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        resolve(reader.result);
+      };
+      reader.onerror = function (error) {
+        reject(error)
+      };
+    })
+  }
+
+  const mapProduct = async ({
+      productName: product,
+      serialNumber: serialNumbers,
+      state,
+      ...restProps
+    }: Record<string, any>) => {
+    const {image, ...restProduct} = product;
+
+    const fileKeys = Object.keys(restProps).filter(p => !!restProps[p] && !!restProps[p].name);
+    const files = await Promise.all(fileKeys.map(k => getBase64(restProps[k])));
 
     return {
       ...restProps,
@@ -28,12 +50,14 @@ function onSubmit(data: FormValues, products?: FormValues[]): Promise<{
       },
       serialNumbers,
       purchaseDate: new Date().toISOString(),
+      ...fileKeys.reduce((acc, next, index) => {
+        acc[next] = files[index]
+        return acc;
+      }, {} as Record<string, any>)
     }
   }
 
   const mapUserData = ({state, ...restData}: Record<string, any>) => {
-
-    console.log(state, restData)
     return {
       ...restData,
       state: typeof state === 'object' ? state.label : state,
@@ -53,10 +77,10 @@ function onSubmit(data: FormValues, products?: FormValues[]): Promise<{
     }, {})
 
     payload.customer = mapUserData(userData)
-    payload.items = [mapProduct(data)]
+    payload.items = [await mapProduct(data)]
   } else {
     payload.customer = mapUserData(data);
-    payload.items = products.map(mapProduct)
+    payload.items = await Promise.all(products.map(mapProduct))
   }
 
   return fetch('https://ensdmrncariaqkb.m.pipedream.net', {
@@ -140,7 +164,7 @@ const App: React.FC = () => {
   return (
     <>
       {content}
-      {postError && <h3 style={{ color: 'red' }}>{postError}</h3>}
+      {postError && <h3 style={{color: 'red'}}>{postError}</h3>}
       {submitting && <h3>Loading...</h3>}
       <ReactModal
         isOpen={modal}
@@ -152,7 +176,8 @@ const App: React.FC = () => {
           } else {
             setModal(false)
           }
-        }}>Ok</button>
+        }}>Ok
+        </button>
       </ReactModal>
     </>
   )
