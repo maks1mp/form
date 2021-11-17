@@ -15,9 +15,13 @@ const FlowSingle: React.FC<{
         fields={formData.find(f => f.name === Sections.all)!.fields}
         handleSubmit={onSubmit}
       >
-          <button type="submit">
-            Register
-          </button>
+        {props => {
+          return (
+            <button disabled={props.isSubmitting} type="submit">
+              Register
+            </button>
+          )
+        }}
       </FormContent>
     </>
   )

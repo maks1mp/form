@@ -79,9 +79,13 @@ const FlowMultiple: React.FC<{
             setVisibleEdit(true)
           }}
       >
-          <button type="submit">
+        {props => {
+          return (
+            <button disabled={props.isSubmitting} type="submit">
               Register
-          </button>
+            </button>
+          )
+        }}
       </FormContent>}
 
       {visibleEdit && fulfilledOrder && Array.isArray(fulfilledOrder) && (
@@ -89,9 +93,13 @@ const FlowMultiple: React.FC<{
           fields={formData.find(d => d.name === Sections.customer)?.fields!}
           handleSubmit={values => onSubmit(values, fulfilledOrder)}
         >
-          <button type="submit">
-            Register
-          </button>
+          {props => {
+            return (
+              <button disabled={props.isSubmitting} type="submit">
+                Register
+              </button>
+            )
+          }}
         </FormContent>
       )}
     </>

@@ -1,6 +1,6 @@
 import React from 'react';
 import DatePicker from 'react-datepicker'
-import {ErrorMessage, Field, FieldProps, Form, Formik} from 'formik';
+import {ErrorMessage, Field, FieldProps, Form, Formik, FormikProps} from 'formik';
 import {FormField, FormValues, Types} from 'types';
 import {Select} from 'form/components/Select';
 
@@ -16,6 +16,7 @@ import AsyncSelect from 'react-select/async';
 const FormContent: React.FC<{
   fields: FormField[],
   handleSubmit: (p: FormValues) => void,
+  children: (props: FormikProps<FormValues>) => React.ReactNode,
 }> = ({
   fields,
   handleSubmit,
@@ -255,7 +256,7 @@ const FormContent: React.FC<{
             })}
           </>
           {formik.isSubmitting && <h3>Loading...</h3>}
-          {children}
+          {children(formik)}
         </Form>
       )}
     </Formik>
